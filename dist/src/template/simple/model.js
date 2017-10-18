@@ -3,11 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const sanitize = require("mongo-sanitize");
 class Model {
-    constructor({ name, fields, indexes, methods }) {
+    constructor({ name, fields, indexes }) {
         this.name = name;
         this.constructSchema(fields);
         this.constructIndex(indexes);
-        this.constructMethods(methods);
+        this.constructMethods();
         this.constructEntidade();
     }
     //Construir Schema
@@ -24,9 +24,8 @@ class Model {
         this.entidade.index(indexes);
     }
     //Construir methods da entidade
-    constructMethods(methods) {
-        if (methods)
-            methods.forEach(el => this.entidade.methods[methods] = this[methods]);
+    constructMethods() {
+        //this.entidade.methods[methods] = methods
     }
     //Construir entidade do mongoose
     constructEntidade() {

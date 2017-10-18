@@ -1,9 +1,10 @@
-import { Router } from 'express'
+import { Router, Request, Response, NextFunction } from 'express'
 
-import { AppModel } from './../../modules/app/app.model'
-import { SessaoModel } from './../../modules/sessao/sessao.model'
-import { LogModel } from './../../modules/log/log.model'
-import utilRequest from './../../util/request'
+import { AppModel } from './../../app/app/app.model'
+import { SessaoModel } from './../../app/sessao/sessao.model'
+import { LogModel } from './../../app/log/log.model'
+
+import { getClientInfo } from './../../util/request'
 
 export class Controller {
   private logM: LogModel
@@ -33,41 +34,29 @@ export class Controller {
   }
 
   protected setget (rota, meta) {
-    this.route.get(rota.src, [this.meta(rota, meta), this.request(rota)])
+    this.route.get(rota.src, [this.meta(rota, meta), this.method(rota)])
   }
 
   protected setpost (rota, meta) {
-    this.route.post(rota.src, [this.meta(rota, meta), this.request(rota)])
+    this.route.post(rota.src, [this.meta(rota, meta), this.method(rota)])
   }
 
   protected setput (rota, meta) {
-    this.route.put(rota.src, [this.meta(rota, meta), this.request(rota)])
+    this.route.put(rota.src, [this.meta(rota, meta), this.method(rota)])
   }
 
   protected setdelete (rota, meta) {
-    this.route.delete(rota.src, [this.meta(rota, meta), this.request(rota)])
+    this.route.delete(rota.src, [this.meta(rota, meta), this.method(rota)])
   }
 
-  private request(rota) {
-    let f = []
-    if(typeof(rota.action) == 'object') {
-      rota.action.forEach(element => {
-        f.push(this.method(element, rota))
-      })
-    }else{
-      f.push(this.method(rota.action, rota))
-    }        
-    return f
-  }
-
-  private method(action, rota) {
-    return (req, res, next) => this[action](req, res, next, rota)
+  private method(rota) {
+    return (req: Request, res: Response, next: NextFunction) => this[rota.action](req, res, next, rota)
   }
 
   private meta(rota, meta) {
     const regras = Object.assign({}, meta, rota.meta)
-    return (req, res, next) => {
-      this.asyncMeta(regras, req, res, next, rota).then(fc => {        
+    return (req: Request, res: Response, next: NextFunction) => {
+      return this.asyncMeta(regras, req, res, next, rota).then(fc => {        
         if(fc.err) return this.errorMsg(res, fc.err, fc.type, fc.message, fc.obj)
         return next()
       })
@@ -81,10 +70,7 @@ export class Controller {
       //Valida App
       await this.validaApp(req, res, rota)
       if(req.app) this.act_log._app = req.app
-      //Valida a senha do app
-      if (regras.app) {
-        await this.validaSenhaApp(req, res, rota)
-      }
+      
       //Sessao
       if (regras.sessao) {
         await this.validaSessao(req, res, rota)
@@ -113,18 +99,6 @@ export class Controller {
       appObj.verificaApp(app, (err, item) => {
         if(err || !item) return reject({ err: 500, type: 'app', message: 'App não encontrado' })
         req.app = item._id
-        return resolve(true)
-      })
-    })
-  }
-
-  private validaSenhaApp(req, res, rota): any {
-    return new Promise((resolve, reject) => {
-      const secret = req.headers['x-app-senha']
-      if (!secret) return reject({ err: 500, type: 'app', message: 'Senha do app obrigatória' })
-      const appObj = new AppModel()
-      appObj.verificaSenhaApp(req.app, secret, (err, item) => {
-        if(err || !item) return reject({ err: 500, type: 'app', message: 'Senha inválida' })
         return resolve(true)
       })
     })
@@ -169,7 +143,7 @@ export class Controller {
         headers: req.headers,
         body: req.body,
         query: req.query,
-        agent: utilRequest.getClientInfo(req)
+        agent: getClientInfo(req)
       }
       resolve(true)
     })

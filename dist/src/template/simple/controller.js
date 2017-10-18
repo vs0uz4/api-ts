@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const app_model_1 = require("./../../modules/app/app.model");
-const sessao_model_1 = require("./../../modules/sessao/sessao.model");
-const log_model_1 = require("./../../modules/log/log.model");
+const app_model_1 = require("./../../app/app/app.model");
+const sessao_model_1 = require("./../../app/sessao/sessao.model");
+const log_model_1 = require("./../../app/log/log.model");
 const request_1 = require("./../../util/request");
 class Controller {
     constructor(rotas, validation = false, meta = {}) {
@@ -34,36 +34,24 @@ class Controller {
         return res.json(json);
     }
     setget(rota, meta) {
-        this.route.get(rota.src, [this.meta(rota, meta), this.request(rota)]);
+        this.route.get(rota.src, [this.meta(rota, meta), this.method(rota)]);
     }
     setpost(rota, meta) {
-        this.route.post(rota.src, [this.meta(rota, meta), this.request(rota)]);
+        this.route.post(rota.src, [this.meta(rota, meta), this.method(rota)]);
     }
     setput(rota, meta) {
-        this.route.put(rota.src, [this.meta(rota, meta), this.request(rota)]);
+        this.route.put(rota.src, [this.meta(rota, meta), this.method(rota)]);
     }
     setdelete(rota, meta) {
-        this.route.delete(rota.src, [this.meta(rota, meta), this.request(rota)]);
+        this.route.delete(rota.src, [this.meta(rota, meta), this.method(rota)]);
     }
-    request(rota) {
-        let f = [];
-        if (typeof (rota.action) == 'object') {
-            rota.action.forEach(element => {
-                f.push(this.method(element, rota));
-            });
-        }
-        else {
-            f.push(this.method(rota.action, rota));
-        }
-        return f;
-    }
-    method(action, rota) {
-        return (req, res, next) => this[action](req, res, next, rota);
+    method(rota) {
+        return (req, res, next) => this[rota.action](req, res, next, rota);
     }
     meta(rota, meta) {
         const regras = Object.assign({}, meta, rota.meta);
         return (req, res, next) => {
-            this.asyncMeta(regras, req, res, next, rota).then(fc => {
+            return this.asyncMeta(regras, req, res, next, rota).then(fc => {
                 if (fc.err)
                     return this.errorMsg(res, fc.err, fc.type, fc.message, fc.obj);
                 return next();
@@ -79,10 +67,6 @@ class Controller {
                 yield this.validaApp(req, res, rota);
                 if (req.app)
                     this.act_log._app = req.app;
-                //Valida a senha do app
-                if (regras.app) {
-                    yield this.validaSenhaApp(req, res, rota);
-                }
                 //Sessao
                 if (regras.sessao) {
                     yield this.validaSessao(req, res, rota);
@@ -117,19 +101,6 @@ class Controller {
                 if (err || !item)
                     return reject({ err: 500, type: 'app', message: 'App não encontrado' });
                 req.app = item._id;
-                return resolve(true);
-            });
-        });
-    }
-    validaSenhaApp(req, res, rota) {
-        return new Promise((resolve, reject) => {
-            const secret = req.headers['x-app-senha'];
-            if (!secret)
-                return reject({ err: 500, type: 'app', message: 'Senha do app obrigatória' });
-            const appObj = new app_model_1.AppModel();
-            appObj.verificaSenhaApp(req.app, secret, (err, item) => {
-                if (err || !item)
-                    return reject({ err: 500, type: 'app', message: 'Senha inválida' });
                 return resolve(true);
             });
         });
@@ -172,7 +143,7 @@ class Controller {
                 headers: req.headers,
                 body: req.body,
                 query: req.query,
-                agent: request_1.default.getClientInfo(req)
+                agent: request_1.getClientInfo(req)
             };
             resolve(true);
         });

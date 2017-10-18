@@ -1,4 +1,4 @@
-import UtilString from '../../util/string'
+import { removerAcentos } from '../../util/string'
 
 export class Filter{
   protected queryParams: any = {}
@@ -64,7 +64,7 @@ export class Filter{
   //Funções de apoio ===================
   protected like(valor: String) {
     if(!valor) valor = ''
-    var regex = new RegExp(UtilString.removerAcentos(valor), "i")
+    var regex = new RegExp(removerAcentos(valor), "i")
     return regex
   }    
 }

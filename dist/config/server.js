@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const cors = require("cors");
 const socketio = require("socket.io");
-const app_1 = require("./../src/app");
+const src_1 = require("./../src");
 class Server {
     constructor() {
         this.app = express();
@@ -28,16 +28,16 @@ class Server {
     //Rotas
     routes() {
         //Rotas do Aplicativo
-        this.app.use(app_1.default);
+        this.app.use(src_1.default);
         //Erro
         this.app.get('*', function (req, res) {
-            return res.status('404').json({ error: 'Method not allowed!' });
+            return res.status(404).json({ error: 'Method not allowed!' });
         });
         this.app.post('*', function (req, res) {
-            return res.status('404').json({ error: 'Method not allowed!' });
+            return res.status(404).json({ error: 'Method not allowed!' });
         });
         this.app.put('*', function (req, res) {
-            return res.status('404').json({ error: 'Method not allowed!' });
+            return res.status(404).json({ error: 'Method not allowed!' });
         });
     }
     //Instancia o socket

@@ -3,7 +3,7 @@ import * as bodyParser from 'body-parser'
 import * as helmet from 'helmet'
 import * as cors from 'cors'
 import * as socketio from 'socket.io'
-import routes from './../src/app'
+import routes from './../src'
 
 class Server {
   public app: express.Application
@@ -35,13 +35,13 @@ class Server {
 
     //Erro
     this.app.get('*', function (req, res) {
-      return res.status('404').json({ error: 'Method not allowed!' })
+      return res.status(404).json({ error: 'Method not allowed!' })
     })
     this.app.post('*', function (req, res) {
-      return res.status('404').json({ error: 'Method not allowed!' })
+      return res.status(404).json({ error: 'Method not allowed!' })
     })
     this.app.put('*', function (req, res) {
-      return res.status('404').json({ error: 'Method not allowed!' })
+      return res.status(404).json({ error: 'Method not allowed!' })
     })
   }
 

@@ -5,11 +5,11 @@ export class Model {
   public name: String
   public entidade: Schema
 
-  constructor({name, fields, indexes, methods}) {
+  constructor({ name, fields, indexes }) {
     this.name = name
     this.constructSchema(fields)
     this.constructIndex(indexes)
-    this.constructMethods(methods)
+    this.constructMethods()
     this.constructEntidade()
   }
 
@@ -29,9 +29,8 @@ export class Model {
   }
 
   //Construir methods da entidade
-  protected constructMethods(methods) {
-    if (methods)
-    methods.forEach(el => this.entidade.methods[methods] = this[methods])
+  protected constructMethods() {
+    //this.entidade.methods[methods] = methods
   }
 
   //Construir entidade do mongoose

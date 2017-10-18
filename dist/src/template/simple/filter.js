@@ -63,7 +63,7 @@ class Filter {
     like(valor) {
         if (!valor)
             valor = '';
-        var regex = new RegExp(string_1.default.removerAcentos(valor), "i");
+        var regex = new RegExp(string_1.removerAcentos(valor), "i");
         return regex;
     }
 }
