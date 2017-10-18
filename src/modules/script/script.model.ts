@@ -11,8 +11,7 @@ export class ScriptModel extends Model {
       }
     }
     const indexes = { nome: 1 }
-    const methods = []
-    super({ name: 'Script', fields, indexes, methods })
+    super({ name: 'Script', fields, indexes })
   }
 
   findNome (nome, cb) {

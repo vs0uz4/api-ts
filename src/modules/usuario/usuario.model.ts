@@ -10,16 +10,16 @@ export class UsuarioModel extends Model implements CrudModel{
       senha: {type: String, required: true},
     }
     const indexes = { email: 1, nome: 1 }
-    const methods = ['compareHash']
-    super({ name: 'Usuario', fields, indexes, methods })
+    super({ name: 'Usuario', fields, indexes })
   }
   
-  //Compara a senha
-  protected compareHash (senha: String, cb: Function) {
-    bcrypt.compare(senha, this.senha, function(err, isMatch){
-      if (err) return cb(err, null)
-      cb(null, isMatch)
-    })
+  protected constructMethods() {
+    this.entidade.methods.compareHash = function (senha: String, cb: Function) {
+      bcrypt.compare(senha, this.senha, function(err, isMatch){
+        if (err) return cb(err, null)
+        cb(null, isMatch)
+      })
+    }
   }
 
   //Update dados senha

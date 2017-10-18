@@ -12,8 +12,7 @@ class ScriptModel extends model_1.Model {
             }
         };
         const indexes = { nome: 1 };
-        const methods = [];
-        super({ name: 'Script', fields, indexes, methods });
+        super({ name: 'Script', fields, indexes });
     }
     findNome(nome, cb) {
         this.findOne({ nome }, ['pronto', 'result'], cb);

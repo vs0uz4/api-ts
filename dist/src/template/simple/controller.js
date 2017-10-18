@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const app_model_1 = require("./../../app/app/app.model");
-const sessao_model_1 = require("./../../app/sessao/sessao.model");
-const log_model_1 = require("./../../app/log/log.model");
+const app_model_1 = require("./../../modules/app/app.model");
+const sessao_model_1 = require("./../../modules/sessao/sessao.model");
+const log_model_1 = require("./../../modules/log/log.model");
 const request_1 = require("./../../util/request");
 class Controller {
     constructor(rotas, validation = false, meta = {}) {

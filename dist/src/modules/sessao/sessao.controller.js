@@ -9,12 +9,12 @@ class SessaoCtrl extends controller_1.Controller {
     constructor() {
         // Constroe rotas
         const rotas = [
-            { method: 'post', src: '/login', action: 'login', meta: { valida: true } },
-            { method: 'post', src: '/continue', action: 'continue', meta: { valida: true } },
-            { method: 'post', src: '/refresh', action: 'refresh', meta: { valida: true } },
-            { method: 'post', src: '/logout', action: 'logout', meta: { valida: true } }
+            { method: 'post', src: '/login', action: 'login' },
+            { method: 'post', src: '/continue', action: 'continue' },
+            { method: 'post', src: '/refresh', action: 'refresh' },
+            { method: 'post', src: '/logout', action: 'logout' }
         ];
-        super(rotas, new sessao_validation_1.SessaoValidation(), { app: true });
+        super(rotas, new sessao_validation_1.SessaoValidation(), { valida: true });
         //Model
         this.model = new sessao_model_1.SessaoModel();
         //Secret
@@ -22,14 +22,14 @@ class SessaoCtrl extends controller_1.Controller {
     }
     criaSessao(req, res, usuario) {
         const usuarioM = new usuario_model_1.UsuarioModel();
-        const { token, refresh, expira } = request_1.default.newToken(this.secret, usuario);
+        const { token, refresh, expira } = request_1.newToken(this.secret, usuario);
         const sessao = {
             _app: req.app,
             _usuario: usuario,
             token,
             refresh,
             expira,
-            agent: request_1.default.getClientInfo(req)
+            agent: request_1.getClientInfo(req)
         };
         this.model.create(sessao, (err, sessao) => {
             if (err || !sessao)
@@ -70,7 +70,7 @@ class SessaoCtrl extends controller_1.Controller {
         });
     }
     refresh(req, res, next) {
-        const decode = request_1.default.validaRefresh(this.secret, req.body.refresh);
+        const decode = request_1.validaRefresh(this.secret, req.body.refresh);
         if (!decode)
             return this.errorMsg(res, 404, 'error', 'Sessão não encontrada');
         this.model.getSessaoRefresh(req.app, req.body.refresh, (err, sessao) => {

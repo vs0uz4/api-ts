@@ -1,10 +1,10 @@
 import { Router } from 'express'
-import { Script } from './app/script/script'
-import { AppCtrl } from './app/app/app.controller'
-import { IndexCtrl } from './app/index.controller'
-import { SessaoCtrl } from './app/sessao/sessao.controller'
-import { UsuarioCtrl } from './app/usuario/usuario.controller'
-import { TarefaCtrl } from './app/tarefa/tarefa.controller'
+import { Script } from './modules/script/script'
+import { AppCtrl } from './modules/app/app.controller'
+import { IndexCtrl } from './modules/index.controller'
+import { SessaoCtrl } from './modules/sessao/sessao.controller'
+import { UsuarioCtrl } from './modules/usuario/usuario.controller'
+import { TarefaCtrl } from './modules/tarefa/tarefa.controller'
 
 //Roda os Scripts
 new Script()

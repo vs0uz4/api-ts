@@ -11,5 +11,4 @@ export class TarefaCtrl extends CrudController {
     const meta = { sessao: true, usuario: true }
     super(rotas, TarefaModel, TarefaValidation, TarefaFilter, meta)
   }
-
 }

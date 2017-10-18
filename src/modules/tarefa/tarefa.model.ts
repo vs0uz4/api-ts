@@ -11,8 +11,7 @@ constructor() {
       nome: {type: String, required: true}
     }
     const indexes = { feita: 1, nome: 1 }
-    const methods = []
-    super({ name: 'Tarefa', fields, indexes, methods })
+    super({ name: 'Tarefa', fields, indexes })
   }
 
   find (query: any, cb: Function) {

@@ -32,13 +32,14 @@ class SessaoModel extends model_1.Model {
             }
         };
         let indexes = { _app: 1, _usuario: 1, token: 1, refresh: 1, agent: 1 };
-        const methods = ['destroy'];
-        super({ name: 'Sessao', fields, indexes, methods });
+        super({ name: 'Sessao', fields, indexes });
     }
-    destroy(type, message, cb) {
-        this.ativo = false;
-        this.motivo_cancel = { type, message };
-        this.save(cb);
+    constructMethods() {
+        this.entidade.methods.destroy = function (type, message, cb) {
+            this.ativo = false;
+            this.motivo_cancel = { type, message };
+            this.save(cb);
+        };
     }
     getSessaoRefresh(_app, refresh, cb) {
         this.findOne({ _app, refresh, ativo: true }, ['_id', '_usuario'], cb);

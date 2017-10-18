@@ -26,7 +26,7 @@ export class Script {
     this.model.findNome(nome, (err, item) => {
       if(!item || !item.pronto) {
         const model = new AppModel()
-        const app = { nome: 'App Web', senha: 'Sec!AppWeb@0129' }
+        const app = { nome: 'App Web' }
         model.create(app, (err, insert) => {
           if(!err && insert) {
             this.ScriptPronto(nome, 'finalizado', insert)
@@ -41,7 +41,7 @@ export class Script {
     this.model.findNome(nome, (err, item) => {
       if(!item || !item.pronto) {
         const model = new UsuarioModel()
-        const usuario = { nome: 'Demo User', email: 'demo@gmail.com', senha: 'demo.123' }
+        const usuario = { nome: 'Demo User', email: 'demo@api.com', senha: 'demo.123' }
         model.create(usuario, (err, insert) => {
           if(!err && insert) {
             this.ScriptPronto(nome, 'finalizado', insert)

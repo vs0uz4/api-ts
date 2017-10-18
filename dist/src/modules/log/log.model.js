@@ -22,8 +22,7 @@ class LogModel extends model_1.Model {
             }
         };
         const indexes = { _app: 1, _usuario: 1, nivel: 1, url: 1, rota: 1 };
-        const methods = [];
-        super({ name: 'Log', fields, indexes, methods });
+        super({ name: 'Log', fields, indexes });
     }
 }
 exports.LogModel = LogModel;

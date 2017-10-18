@@ -10,16 +10,16 @@ class UsuarioModel extends model_1.Model {
             senha: { type: String, required: true },
         };
         const indexes = { email: 1, nome: 1 };
-        const methods = ['compareHash'];
-        super({ name: 'Usuario', fields, indexes, methods });
+        super({ name: 'Usuario', fields, indexes });
     }
-    //Compara a senha
-    compareHash(senha, cb) {
-        bcrypt.compare(senha, this.senha, function (err, isMatch) {
-            if (err)
-                return cb(err, null);
-            cb(null, isMatch);
-        });
+    constructMethods() {
+        this.entidade.methods.compareHash = function (senha, cb) {
+            bcrypt.compare(senha, this.senha, function (err, isMatch) {
+                if (err)
+                    return cb(err, null);
+                cb(null, isMatch);
+            });
+        };
     }
     //Update dados senha
     hashSenha(senha, cb) {

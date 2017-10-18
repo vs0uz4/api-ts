@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express'
 
-import { AppModel } from './../../app/app/app.model'
-import { SessaoModel } from './../../app/sessao/sessao.model'
-import { LogModel } from './../../app/log/log.model'
+import { AppModel } from './../../modules/app/app.model'
+import { SessaoModel } from './../../modules/sessao/sessao.model'
+import { LogModel } from './../../modules/log/log.model'
 
 import { getClientInfo } from './../../util/request'
 

@@ -6,7 +6,7 @@ import { SessaoFilter } from './sessao.filter'
 import { SessaoModel } from './sessao.model'
 
 import { UsuarioModel } from './../usuario/usuario.model'
-import utilRequest from './../../util/request'
+import { newToken, validaRefresh, getClientInfo } from './../../util/request'
 
 export class SessaoCtrl extends Controller {
   private secret: String
@@ -15,12 +15,12 @@ export class SessaoCtrl extends Controller {
   constructor () {
     // Constroe rotas
     const rotas = [
-      { method:'post', src: '/login', action: 'login', meta: { valida: true } },
-      { method:'post', src: '/continue', action: 'continue', meta: { valida: true } },
-      { method:'post', src: '/refresh', action: 'refresh', meta: { valida: true } },
-      { method:'post', src: '/logout', action: 'logout', meta: { valida: true } }
+      { method:'post', src: '/login', action: 'login'},
+      { method:'post', src: '/continue', action: 'continue'},
+      { method:'post', src: '/refresh', action: 'refresh'},
+      { method:'post', src: '/logout', action: 'logout'}
     ]
-    super(rotas, new SessaoValidation(), { app: true })
+    super(rotas, new SessaoValidation(), { valida: true })
 
     //Model
     this.model = new SessaoModel()
@@ -30,14 +30,14 @@ export class SessaoCtrl extends Controller {
 
   private criaSessao(req, res, usuario) {
     const usuarioM = new UsuarioModel()
-    const { token, refresh, expira } = utilRequest.newToken(this.secret, usuario)
+    const { token, refresh, expira } = newToken(this.secret, usuario)
     const sessao = {
       _app: req.app,
       _usuario: usuario,
       token,
       refresh,
       expira,
-      agent: utilRequest.getClientInfo(req)
+      agent: getClientInfo(req)
     }
     this.model.create(sessao, (err, sessao) => {
       if(err || !sessao) return this.errorMsg(res, 500, 'error', 'Erro ao criar sessão!')
@@ -78,7 +78,7 @@ export class SessaoCtrl extends Controller {
   }
 
   refresh (req: Request, res: Response, next: NextFunction) {
-    const decode = utilRequest.validaRefresh(this.secret, req.body.refresh)
+    const decode = validaRefresh(this.secret, req.body.refresh)
     if(!decode) return this.errorMsg(res, 404, 'error', 'Sessão não encontrada')
 
     this.model.getSessaoRefresh(req.app, req.body.refresh, (err, sessao) => {

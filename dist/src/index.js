@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const script_1 = require("./app/script/script");
-const app_controller_1 = require("./app/app/app.controller");
-const index_controller_1 = require("./app/index.controller");
-const sessao_controller_1 = require("./app/sessao/sessao.controller");
-const usuario_controller_1 = require("./app/usuario/usuario.controller");
-const tarefa_controller_1 = require("./app/tarefa/tarefa.controller");
+const script_1 = require("./modules/script/script");
+const app_controller_1 = require("./modules/app/app.controller");
+const index_controller_1 = require("./modules/index.controller");
+const sessao_controller_1 = require("./modules/sessao/sessao.controller");
+const usuario_controller_1 = require("./modules/usuario/usuario.controller");
+const tarefa_controller_1 = require("./modules/tarefa/tarefa.controller");
 //Roda os Scripts
 new script_1.Script();
 //Rotas principais da API
